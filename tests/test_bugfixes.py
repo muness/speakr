@@ -20,6 +20,14 @@ from src.app import app, db
 from src.models import User, Recording
 from src.models.speaker_snippet import SpeakerSnippet
 
+
+def test_file_monitor_normalizes_timezone_aware_metadata_dates_to_utc():
+    from datetime import datetime, timezone, timedelta
+    from src.file_monitor import to_utc_naive
+
+    local = datetime(2026, 10, 2, 14, 59, 12, tzinfo=timezone(timedelta(hours=-4)))
+    assert to_utc_naive(local) == datetime(2026, 10, 2, 18, 59, 12)
+
 # Disable CSRF for testing
 app.config['WTF_CSRF_ENABLED'] = False
 

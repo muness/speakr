@@ -19,6 +19,7 @@ from werkzeug.utils import secure_filename
 from src.utils.ffprobe import get_codec_info, get_creation_date, get_duration, FFProbeError
 from src.utils.ffmpeg_utils import FFmpegError, FFmpegNotFoundError
 from src.utils.audio_conversion import convert_if_needed
+from src.utils.dates import to_utc_naive
 
 # Video retention - when enabled, video files keep their video stream for playback
 VIDEO_RETENTION = os.environ.get('VIDEO_RETENTION', 'false').lower() == 'true'
@@ -464,6 +465,7 @@ class FileMonitor:
                 if not meeting_date:
                     meeting_date = get_creation_date(str(final_path))
                     if meeting_date:
+                        meeting_date = to_utc_naive(meeting_date)
                         self.logger.info(f"Using file metadata creation date: {meeting_date}")
                     else:
                         meeting_date = now
